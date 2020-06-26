@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   StyleSheet,
@@ -16,16 +16,32 @@ import Formulario from './components/Formulario';
 import AsyncStorage from '@react-native-community/async-storage';
 
 const App = () => {
-  const [mostrarForm, setMostrarForm] = useState(false);
 
   //definir el state de citas
   const [citas, setCitas] = useState([]);
 
+  const [mostrarForm, setMostrarForm] = useState(false);
+
+  useEffect( () => {
+    const getCitasStorage = async () => {
+      try{
+        const citasStorage = await AsyncStorage.getItem('citas')
+        citasStorage ? setCitas(JSON.parse(citasStorage)) : null
+      } catch (error){
+        console.log(error)
+      }
+    }
+    getCitasStorage()
+  },[])
+
+
   //Elimina los pacientes del state
   const eliminarPaciente = id => {
-    setCitas(citasActuales => {
-      return citasActuales.filter(cita => cita.id !== id);
-    });
+
+    const citasFiltradas = citas.filter(cita => cita.id !== id);
+
+    setCitas(citasFiltradas);
+    guardarCitasStorage(JSON.stringify(citasFiltradas))
   };
 
   //Muestra o oculta el formulario
