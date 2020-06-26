@@ -13,6 +13,8 @@ import {
 import Cita from './components/Cita';
 import Formulario from './components/Formulario';
 
+import AsyncStorage from '@react-native-community/async-storage';
+
 const App = () => {
   const [mostrarForm, setMostrarForm] = useState(false);
 
@@ -35,6 +37,15 @@ const App = () => {
   //cerrar el teclado
   const cerrarTeclado = () => {
     Keyboard.dismiss()
+  }
+
+  //Almacenar las citas en storage
+  const guardarCitasStorage = async (citasJSON) => {
+    try{
+      await AsyncStorage.setItem('citas', citasJSON)
+    }catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -60,6 +71,7 @@ const App = () => {
                   citas={citas}
                   setCitas={setCitas}
                   setMostrarForm={setMostrarForm}
+                  guardarCitasStorage={guardarCitasStorage}
                 />
               </>
             ) : (

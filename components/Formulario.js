@@ -12,7 +12,7 @@ import {
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import shortid from 'shortid'
 
-const Formulario = ({citas, setCitas, setMostrarForm}) => {
+const Formulario = ({citas, setCitas, setMostrarForm, guardarCitasStorage}) => {
   const [paciente, setPaciente] = useState('');
   const [propietario, setPropietario] = useState('');
   const [telefono, setTelefono] = useState('');
@@ -57,10 +57,16 @@ const Formulario = ({citas, setCitas, setMostrarForm}) => {
       console.log('desde crear nueva cita')
 
       //validando formulario
-      if(paciente.trim() === '' || propietario.trim() === '' || telefono.trim() === '' || fecha.trim() === '' || hora.trim() === '' || sintomas.trim() === '') {
-          mostrarAlerta()
-          return
-      }
+      if(paciente.trim() === '' || 
+          propietario.trim() === '' || 
+          telefono.trim() === '' || 
+          fecha.trim() === '' || 
+          hora.trim() === '' || 
+          sintomas.trim() === '') 
+          {
+            mostrarAlerta()
+            return
+          }
 
       //Crear nueva cita
       const cita = { paciente, propietario, telefono, fecha, hora, sintomas }
@@ -71,10 +77,19 @@ const Formulario = ({citas, setCitas, setMostrarForm}) => {
       const citasNuevo = [...citas, cita]
       setCitas(citasNuevo)
 
+      //Pasar las nuevas citas al storage
+      guardarCitasStorage(JSON.stringify(citasNuevo))
+
       //ocular formulario
       setMostrarForm(false)
 
       //resetear form
+        setSintomas('')
+        setPropietario('')
+        setPaciente('')
+        setHora('')
+        setFecha('')
+        setTelefono('')
 
   }
 
